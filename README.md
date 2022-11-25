@@ -1,5 +1,7 @@
 # HTTP Error: 300 Multiple Choices on the Transport for London (TfL) API.
 
+## __Introduction__
+
 When accessing a web server or application, every HTTP request that is received by a server is responded to with an HTTP status code. HTTP status codes are three-digit codes and are grouped into five different classes. The class of a status code can be identified by its first digit:
 
 1xx: Informational\
@@ -8,23 +10,36 @@ When accessing a web server or application, every HTTP request that is received 
 4xx: Client Error\
 5xx: Server Error
 
-This guide focuses on identifying and troubleshooting when encountering HTTP 300 error codes. The example is given based on the Transport for London (TfL) API.
+This guide focuses on identifying and troubleshooting when encountering HTTP 300 error codes. The example is given based on the [Transport for London (TfL) API](https://api.tfl.gov.uk).
+
+### __Section 1__
 
 Let's plan the journey from Heathrow Airport to Tower Bridge using a Bus and Tube and see which way is faster.
 
-When making the HTTP request using literal words, the following error would be returned:
+When making the HTTP request using literal words, the following code would be returned:
 
-_IT WILL BE PROVIDED THIS WEEK._
+![!](0.png)
 
-This error means that this API cannot find the given location by provided keywords (location identifiers).
+This code means that this API cannot find the given location by provided keywords (location identifiers).
 
-The HTTP status code 300 indicates the Multiple Choices option response. It means that additional action is required on the user side in order to complete the request by choosing one of the options:
+### __Section 2__
 
-_IT WILL BE PROVIDED THIS WEEK._
+The HTTP status code 300 indicates the Multiple Choices option response. It means that additional action is required on the user side in order to complete the request by choosing one of the provided options.
 
-As a part of the response message, TfL API includes disambiguationOptions. Each of these options may have its own weight (accuracy clarifier), allowing us to choose the most precise location using this property.
+As a part of the response message, TfL API includes disambiguationOptions. Each of these options may have its own weight (match quality), allowing us to choose the most precise location using this property. You can see 2 examples below:
 
-We can continue making requests manually until we reach the final result, but we are developers and always like to automate things. Let’s look at the following example:
+![!](1.png)
+
+And with lower match quality:
+
+![!](2.png)
+
+We can continue making requests manually until we reach the final result, but we are developers and always like to automate things. 
+
+### __Section 3__
+
+Let’s look at the following example.
+
 
 ``` python
 resource = 'journey/journeyresults'
@@ -75,6 +90,10 @@ def get_route(mode):
 
 In the **find_highest_match_uri** function, we choose the highest match to the provided location and can receive the final result below without any user taking part in an HTTP request.
 
+### __Section 4__
+
+Let's find the faster way from Heathrow Airport to Tower Bridge using a Bus and Tube:
+
 ``` python
 bus_route = get_route('bus')
 tube_route = get_route('tube')
@@ -109,5 +128,7 @@ Planned duration:
 Bus: 141 minutes
 Tube: 82 minutes 
 ```
+
+### __Conclusion__
 
 Now as you are familiar with the HTTP 300 status code and an optional solution to this, you can improve and automate your next project with TfL API.
